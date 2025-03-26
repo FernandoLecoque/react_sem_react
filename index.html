@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Fotos</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
+        .photo-container { position: relative; display: inline-block; }
+        .photo-container img { width: 150px; height: 150px; object-fit: cover; border-radius: 5px; }
+        .photo-container button { position: absolute; top: 5px; right: 5px; background: red; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Upload de Fotos</h1>
+    <input type="file" id="fileInput" accept="image/*">
+    <button onclick="uploadPhoto()">Upload</button>
+    <div id="gallery"></div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", loadPhotos);
+
+        function uploadPhoto() {
+            const fileInput = document.getElementById("fileInput");
+            if (fileInput.files.length === 0) return;
+            
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imageUrl = e.target.result;
+                savePhoto(imageUrl);
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function savePhoto(imageUrl) {
+            let photos = JSON.parse(localStorage.getItem("photos")) || [];
+            photos.push(imageUrl);
+            localStorage.setItem("photos", JSON.stringify(photos));
+            loadPhotos();
+        }
+
+        function loadPhotos() {
+            const gallery = document.getElementById("gallery");
+            gallery.innerHTML = "";
+            const photos = JSON.parse(localStorage.getItem("photos")) || [];
+            photos.forEach((photo, index) => {
+                const photoContainer = document.createElement("div");
+                photoContainer.classList.add("photo-container");
+                photoContainer.innerHTML = `
+                    <img src="${photo}" alt="Foto">
+                    <button onclick="deletePhoto(${index})">X</button>
+                `;
+                gallery.appendChild(photoContainer);
+            });
+        }
+
+        function deletePhoto(index) {
+            let photos = JSON.parse(localStorage.getItem("photos")) || [];
+            photos.splice(index, 1);
+            localStorage.setItem("photos", JSON.stringify(photos));
+            loadPhotos();
+        }
+    </script>
+</body>
+</html>
