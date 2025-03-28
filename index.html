@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload de Fotos</title>
+    <title>Ramon Lindão</title>
     <style>
-        body { font-family: Georgia, 'Times New Roman', Times, serif, sans-serif; text-align: center; background-color: aliceblue; }
-        #gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px;   }
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
         .photo-container { position: relative; display: inline-block; }
-        .photo-container img { width: 400px; height: 400px; object-fit: cover; border-radius: 10%;   border: 10px solid transparent  }
-        .photo-container button { position: absolute; top: 5px; right: 5px; background: red; color: white; border: none; cursor: pointer; height: 30px; width: 30px;}
-        .photo-container button:hover { background: darkred; }
+        .photo-container img { width: 200px; height: 200px; object-fit: cover; border-radius: 5%; }
+        .photo-container button { position: absolute; top: 5px; background: red; color: white; border: none; cursor: pointer; padding: 5px; }
+        .photo-container button:hover { background: #8B0000; }
+        .delete-btn { right: 5px; }
+        .edit-btn { left: 5px; background: #A020F0; }
     </style>
 </head>
 <body>
     <h1>Upload de Fotos</h1>
+    <h4>Acho que mereço um 10 em ;)</h4>
     <input type="file" id="fileInput" accept="image/*">
     <button onclick="uploadPhoto()">Upload</button>
     <div id="gallery"></div>
@@ -51,7 +54,8 @@
                 photoContainer.classList.add("photo-container");
                 photoContainer.innerHTML = `
                     <img src="${photo}" alt="Foto">
-                    <button onclick="deletePhoto(${index})">X</button>
+                    <button class="delete-btn" onclick="deletePhoto(${index})">X</button>
+                    <button class="edit-btn" onclick="editPhoto(${index})">✎</button>
                 `;
                 gallery.appendChild(photoContainer);
             });
@@ -62,6 +66,25 @@
             photos.splice(index, 1);
             localStorage.setItem("photos", JSON.stringify(photos));
             loadPhotos();
+        }
+
+        function editPhoto(index) {
+            const fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.accept = "image/*";
+            fileInput.onchange = function () {
+                if (fileInput.files.length === 0) return;
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    let photos = JSON.parse(localStorage.getItem("photos")) || [];
+                    photos[index] = e.target.result;
+                    localStorage.setItem("photos", JSON.stringify(photos));
+                    loadPhotos();
+                };
+                reader.readAsDataURL(file);
+            };
+            fileInput.click();
         }
     </script>
 </body>
