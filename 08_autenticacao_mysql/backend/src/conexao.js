@@ -1,7 +1,8 @@
 const db = mysql.createConnection({
     host: 'localhost',
-    user: 'seu_usuario',
-    password: '',
-    database: 'login'
-});
+    user: 'SEU_USUARIO',
+    password: 'SUA_SENHA',
+    database: 'SEU_BANCO'
+  });
+  
 export default db;

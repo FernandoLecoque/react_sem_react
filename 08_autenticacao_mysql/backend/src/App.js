@@ -4,12 +4,17 @@ const cors = require('cors');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
 
-const app = express();
+const port = 3000;
 app.use(cors());
 app.use(express.json());
 
-// Conexão com o banco
+// Criar a instância do app
+const app = express();
 
+// Configurar o servidor para escutar na porta 3000
+app.listen(3000, () => {
+  console.log('Servidor rodando na porta 3000');
+});
 
 // Rota de cadastro
 app.post('/register', async (req, res) => {
@@ -46,11 +51,8 @@ app.post('/login', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('Servidor rodando na porta 3000');
-});
 
-const port = 3000;
+
 
 app.use(express.json())
 
