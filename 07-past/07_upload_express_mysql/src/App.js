@@ -5,7 +5,7 @@ import url from 'url';
 import { createFoto, deleteFoto, readFoto, showOneFoto, updateFoto } from './controllers/FotoController.js';
 import cors from 'cors';
 
-const port = 3020;
+const port = 3000;
 const app = express();
 
 const __filename = url.fileURLToPath(import.meta.url);
